@@ -21,8 +21,8 @@
 
 ### 🌐 [Live Demo → Click Here to Try EchoStudy](https://YOUR-APP-URL.streamlit.app)
 
-> 🔗 **Deployment Link:** `https://YOUR-APP-URL.streamlit.app`
-> *(Update this link after deploying on Streamlit Community Cloud)*
+> 🔗 **Deployment Link:** (https://mirai-final-capstone-project-dtfn246hpypdjn32pktskr.streamlit.app/)
+
 
 ---
 
