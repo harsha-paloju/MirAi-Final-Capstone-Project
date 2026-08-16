@@ -1027,17 +1027,39 @@ def difficulty_badge(diff: str) -> str:
 with st.sidebar:
     st.markdown('<div class="sec-label">⚙ Configuration</div>', unsafe_allow_html=True)
 
-    api_input = st.text_input(
-        "Gemini API Key",
-        value=st.session_state.api_key,
-        type="password",
-        placeholder="Enter your Gemini API key (AIza...)",
-        help="Get your free API key at aistudio.google.com",
-    )
-    if api_input != st.session_state.api_key:
-        st.session_state.api_key = api_input
-        st.session_state.api_key_set = bool(api_input.strip())
-        st.session_state.discovered_models = []
+    # If key is already loaded from Streamlit Secrets, hide the input field
+    _secret_key = ""
+    try:
+        if hasattr(st, "secrets") and "GEMINI_API_KEY" in st.secrets:
+            _secret_key = st.secrets["GEMINI_API_KEY"]
+    except Exception:
+        pass
+
+    if _secret_key:
+        # Key is injected from Secrets — show a locked badge instead of the input
+        if not st.session_state.api_key_set:
+            st.session_state.api_key     = _secret_key
+            st.session_state.api_key_set = True
+        st.markdown("""
+        <div style="display:flex;align-items:center;gap:8px;background:#ecfdf5;
+                    border:1px solid #a7f3d0;border-radius:10px;padding:10px 14px;margin-bottom:8px;">
+            <span style="font-size:1.1rem;">🔐</span>
+            <span style="font-size:0.85rem;font-weight:600;color:#059669;">API Key configured</span>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        # No secret found — show the manual input field for local use
+        api_input = st.text_input(
+            "Gemini API Key",
+            value=st.session_state.api_key,
+            type="password",
+            placeholder="Enter your Gemini API key (AIza...)",
+            help="Get your free API key at aistudio.google.com",
+        )
+        if api_input != st.session_state.api_key:
+            st.session_state.api_key     = api_input
+            st.session_state.api_key_set = bool(api_input.strip())
+            st.session_state.discovered_models = []
 
     # Model discovery
     if st.session_state.api_key_set and not st.session_state.discovered_models:
